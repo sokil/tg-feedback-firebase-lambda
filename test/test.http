@@ -1,0 +1,10 @@
+### Register callback
+GET https://api.telegram.org/bot{{botToken}}/setWebhook?url=https://us-central1-{{projectId}}.cloudfunctions.net/acceptFeedbackRequest
+
+
+### Get webhook info
+GET https://api.telegram.org/bot{{botToken}}/getWebhookInfo
+
+
+### Send message
+GET https://api.telegram.org/bot{{botToken}}/sendMessage?test=test&chatId=

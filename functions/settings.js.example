@@ -1,0 +1,4 @@
+module.exports = {
+    telegramBotToken: "1111111111:AAAAAAAABBBBBBBBCCCCCCCCDDDDDDDDEEE",
+    adminToken: "aaaaaa"
+}
