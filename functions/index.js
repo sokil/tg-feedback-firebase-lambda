@@ -8,11 +8,11 @@ const firestore = new Firestore();
 const adminsCollection = firestore.collection('admins');
 
 function sendMessage(message, chatId) {
-  logger.log("Telegram message", message);
+  logger.log("Telegram message \"" + message + "\" to chat " + chatId);
 
   https
     .get(
-      "https://api.telegram.org/bot" + settings.telegramBotToken + "/sendMessage?chat_id=" + chatId + "&text=" + message + "&disable_web_page_preview=1",
+      "https://api.telegram.org/bot" + settings.telegramBotToken + "/sendMessage?chat_id=" + chatId + "&text=" + encodeURIComponent(message) + "&disable_web_page_preview=1",
       (resp) => {
         resp.on("data", (chunk) => {
           logger.log("Telegram response", chunk.toString());
@@ -49,15 +49,28 @@ async function handleMessage(requestPayload) {
   // load admins
   const adminsQuery = await adminsCollection.get();
   const admins = adminsQuery.docs.map(doc => doc.data());
+  const adminIds = admins.map(admin => admin.userId);
 
   if (admins.length === 0) {
     logger.info("Admins not registered yet", {structuredData: true});
     return;
   }
 
+  // handle reply from admin to user
+  if (requestPayload.message.reply_to_message && adminIds.indexOf(userIdFrom)) {
+    const repliedText = requestPayload.message.reply_to_message.text;
+    const repliedTextMatch = repliedText.match(/From: @[a-zA-Z0-9_]+ \((\d+)\)\n\n(.+)/);
+    if (repliedTextMatch) {
+      sendMessage(messageText, repliedTextMatch[1]);
+    }
+
+    return;
+  }
+
   // broadcast message to admins
   for (let i in admins) {
-    sendMessage(JSON.stringify(requestPayload), admins[i].chatId);
+    const message = "From: @" + usernameFrom + " (" + userIdFrom + ")\n\n" + messageText
+    sendMessage(message, admins[i].chatId);
   }
 }
 

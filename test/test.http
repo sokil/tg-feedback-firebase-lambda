@@ -7,4 +7,4 @@ GET https://api.telegram.org/bot{{botToken}}/getWebhookInfo
 
 
 ### Send message
-GET https://api.telegram.org/bot{{botToken}}/sendMessage?test=test&chatId=
+GET https://api.telegram.org/bot{{botToken}}/sendMessage?text=test\nhhh&chat_id=
