@@ -59,9 +59,17 @@ async function handleMessage(requestPayload) {
   // handle reply from admin to user
   if (requestPayload.message.reply_to_message && adminIds.indexOf(userIdFrom)) {
     const repliedText = requestPayload.message.reply_to_message.text;
-    const repliedTextMatch = repliedText.match(/From: @[a-zA-Z0-9_]+ \((\d+)\)\n\n(.+)/);
+    const repliedTextMatch = repliedText.match(/From: @([a-zA-Z0-9_]+) \((\d+)\)\n\n(.+)/);
     if (repliedTextMatch) {
-      sendMessage(messageText, repliedTextMatch[1]);
+      sendMessage(messageText, repliedTextMatch[2]);
+
+      // broadcast message to admins
+      for (let i in admins) {
+        sendMessage(
+          "Reply to: @" + repliedTextMatch[1] + " (" + userIdFrom + ")\n\n" + messageText,
+          admins[i].chatId
+        );
+      }
     }
 
     return;
@@ -69,8 +77,10 @@ async function handleMessage(requestPayload) {
 
   // broadcast message to admins
   for (let i in admins) {
-    const message = "From: @" + usernameFrom + " (" + userIdFrom + ")\n\n" + messageText
-    sendMessage(message, admins[i].chatId);
+    sendMessage(
+      "From: @" + usernameFrom + " (" + userIdFrom + ")\n\n" + messageText,
+      admins[i].chatId
+    );
   }
 }
 
