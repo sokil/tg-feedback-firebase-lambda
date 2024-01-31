@@ -8,9 +8,9 @@ Built over Google Firebase Functions
 
 2. Create new telegram bot in @bothfather
    
-3. Rename `firebasercz.example` to `firebasercz.example` and onfigure you project id where you want to deploy function.
+3. Rename `firebasercz.example` to `firebasercz` and configure you project id where you want to deploy function.
 
-4. Rename `functions/settings.js.example` to `functions/settings.js` and define Telegram bot token. Also you need t odefine admin token to authorize in bot as admin.
+4. Rename `functions/settings.js.example` to `functions/settings.js` and define Telegram bot token. Also you need to define admin token to authorize in bot as admin.
 
 5. Deploy function:
 
